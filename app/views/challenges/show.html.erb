@@ -1,0 +1,29 @@
+<%= breadcrumbs [["Challenges", challenges_path], @challenge.name] %>
+<p style="color: green"><%= notice %></p>
+<div class="description">
+  <%= simple_format @challenge.description %>
+</div>
+<% @challenge.tasks.solved.each_with_index do |task| %>
+  <div class="task solved">
+    <div class="question">
+      <%= simple_format task.question  %>
+    </div>
+    <div class="flag"> => <%= task.flag %></div>
+  </div>
+<% end %>
+<% if @challenge.current_task %>
+Your task: <br>
+  <%= print_current_task @challenge.current_task.question %>
+  <div id="challenge-ansver-form">
+    <%= form_with scope: :challenge, 
+                  url: challenge_solve_path(id: @challenge.id), 
+                  remote: true do |form| %>
+      <label for="checkout-flag">Answer:</label> <br>
+      <%= form.text_field :flag, autocomplete: 'off', id: 'checkout-flag' %>
+      <%= form.submit 'check' %>
+    <% end %>
+  </div>
+<% else %>
+  <%= print_current_task 'My congratulations, Captain. A dazzling display of logic.' %>
+<% end %>
+

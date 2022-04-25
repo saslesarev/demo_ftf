@@ -1,0 +1,13 @@
+<p style="color: green"><%= notice %></p>
+
+<div>
+  Challenges
+</div>
+
+<div id="challenges">
+  <% @challenges.each do |challenge| %>
+    <%= content_tag (challenge.published? ? :p : :s), link_to(challenge.name, challenge)%>
+  <% end %>
+</div>
+
+<%= link_to "Add new", new_challenge_path %>

@@ -1,0 +1,57 @@
+<%= form_with(model: challenge) do |form| %>
+  <% if challenge.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(challenge.errors.count, "error") %> prohibited this challenge from being saved:</h2>
+
+      <ul>
+        <% challenge.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div>
+    <%= form.label :name, style: "display: block" %>
+    <%= form.text_field :name, size: 80 %>
+  </div>
+
+  <div>
+    <%= form.label :description, style: "display: block" %>
+    <%= form.text_area :description, cols: 80, rows: 10 %>
+  </div>
+
+
+  <div>
+    <%= form.label :status, style: "display: block" %>
+    <%= form.select :status, Challenge.statuses.keys %>
+  </div>
+  
+  <% @challenge.tasks.each do |task| %>
+    <div>
+      <%= form.fields_for :tasks, task do |task| %>
+        <%= render 'task_fields', task: task %>
+      <% end %>
+    </div>
+  <% end %>
+  
+
+  <div data-controller="challenge-form">
+    <template data-challenge-form-target="template">
+      <div>
+        <%= form.fields_for :tasks, Task.new, child_index: '::index::' do |task| %>
+          <%= render 'task_fields', task: task %>
+        <% end %>
+        </div>
+    </template>
+
+    <div data-challenge-form-target="list" class="tasks">
+    </div>
+
+    <div data-challenge-form-target="add-link" class="add-item-link"> 
+      <%= link_to  'Add task', '#', data: {action: "challenge-form#add_task"} %>
+    </div>
+  </div>
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
